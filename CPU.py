@@ -65,13 +65,13 @@ class CPU():
 
     #this function takes in a bus/WORD and puts it into where the stackpointer is currently pointing to and then moves down to another memory address
     def push(self,op):
-        self.ram.write(self.stackptr.read(),op)
+        self.ram.write(self.stackptr.read(),self.acc.read())
         self.stackptr.update(circ.BUS_SUBT(self.stackptr.read(),to_bus(1)))
 
     #this function moves the pointer up by one memory address and displays the value at that address
     def pop(self,op):
         self.stackptr.update(circ.Bus_ADD(self.stackptr.read(),to_bus(1)))
-        return self.ram.read(self.stackptr.read())
+        self.acc.update(self.ram.read(self.stackptr.read()))
     
     #sets the pc to whatever the operand was/essentially "goes" to a specific memory address
     def jmp(self,op):
@@ -134,13 +134,13 @@ class CPU():
         self.acc.update(circ.Bitwise_NOT(self.reg1.read()))
 
     def eq(self,op):
-        self.acc.update(circ.Equality(self.reg1.read(),self.reg2.read()))
+        self.acc.update(to_bus(circ.Equality(self.reg1.read(),self.reg2.read())))
 
     def gt(self,op):
-        self.acc.update(to_bus(to_int(circ.Check_GRTO(self.reg1.read(),self.reg2.read()))))
+        self.acc.update(to_bus(circ.Check_GRTO(self.reg1.read(),self.reg2.read())))
     
     def gts(self,op):
-        self.acc.update(to_bus(to_int(circ.Check_GRTS(self.reg1.read(),self.reg2.read()))))
+        self.acc.update(to_bus(circ.Check_GRTS(self.reg1.read(),self.reg2.read())))
 
     def lshift(self,op):
         self.acc.update(circ.LS(self.reg1.read()))
