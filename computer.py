@@ -56,6 +56,8 @@ def assemble_load(program):
 24 GT -> This instruction takes the content in register 1 and register 2 and determines if register 1 is greater than register 2 it updates the acc as 1(true) or 0(false)
 25 GRS -> This instruction takes the content in register 1 and register 2 and determines if register 1 is strictly greater than register 2 it updates the acc as 1(true) or 0(false)
 26 LS -> This instruction performs bitwise left shift on whatever value is inside the acc, it essentially multiplies a number by 2
+27 IN -> This instruction reads a keyboard stroke and stores it in the acc as a numeric value
+28 OUT -> This instructions prints whatever is in the acc to the screen (for now this is the terminal)
 31 NOP -> This instruction does nothing (good as a placeholder for pausing without stopping the program)
 """
 #Now to create a program you must always specifiy and opcode and operend
@@ -76,7 +78,7 @@ main_ram.write(to_bus(1001),to_bus(10))
 #then the operand just corresponds to what address in memory to fetch data ifff the instruction requires data
 #instructions are read from left to right, and then the (0,0) is important to actually stop the cpu and not run forever
 #finally i parse the program into the assemble load function so that it can load it into memory
-program = [(7,1000),(8,1001),(1,0),(31,0),(0,0)]
+program = [(28,0),(27,0),(0,0)]
 assemble_load(program)
 
 
@@ -86,7 +88,5 @@ main_cpu.run()
 #This is the debug area
 #since my current cpu/computer cant take in input or show output i have to use print statements on indidual registers or memory address
 #this is to verify that the program ran as expected
-print(to_int(main_cpu.reg1.read()))
-print(to_int(main_cpu.reg2.read()))
+
 print(to_int(main_cpu.acc.read()))
-print(to_int(main_cpu.PC.read()))
