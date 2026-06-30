@@ -45,6 +45,8 @@ class CPU():
                     24: self.gt,
                     25: self.gts,
                     26: self.lshift,
+                    27: self.Out,
+                    28: self.In,
                     31: self.nop}
     
     #breaks up a word into its opcode and its operand
@@ -147,6 +149,12 @@ class CPU():
 
     def nop(self,op):
         pass
+
+    def In(self,op):
+        self.acc.update(to_bus(ord(input())))
+    def Out(self,op):
+        print(chr(to_int(self.acc.read())))
+
 
     #this executes the fetch ececute cycle once
     def step(self):
