@@ -67,26 +67,26 @@ def assemble_load(program):
 #finally after creating a program parse it into the assemble_load function and run the cpu
 
 #this is just me manually initiallizing some values. memory location 1000 = 5, memory location 1001 = 1
-main_ram.write(to_bus(1000),to_bus(5))
-main_ram.write(to_bus(1001),to_bus(1))
-main_ram.write(to_bus(500),Encode(1,0))
-main_ram.write(to_bus(501),Encode(6,0))
+main_ram.write(to_bus(1000),to_bus(12))
+main_ram.write(to_bus(1001),to_bus(10))
+
 
 
 #this program is a list of tuples, each tuple indicating an opcode and operand. making use of the isa table in cpu i can get the opcode
 #then the operand just corresponds to what address in memory to fetch data ifff the instruction requires data
 #instructions are read from left to right, and then the (0,0) is important to actually stop the cpu and not run forever
 #finally i parse the program into the assemble load function so that it can load it into memory
-program = [(7,1000),(8,1001),(5,500),(0,0)]
+program = [(7,1000),(8,1001),(1,0),(31,0),(0,0)]
 assemble_load(program)
 
 
 #this runs the cpu by calling the run() function and it starts executing instructions from memort address 0
 main_cpu.run()
 
-
 #This is the debug area
 #since my current cpu/computer cant take in input or show output i have to use print statements on indidual registers or memory address
 #this is to verify that the program ran as expected
+print(to_int(main_cpu.reg1.read()))
+print(to_int(main_cpu.reg2.read()))
 print(to_int(main_cpu.acc.read()))
 print(to_int(main_cpu.PC.read()))
