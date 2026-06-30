@@ -30,4 +30,25 @@ Now lets go through each layer:
    To begin with i create a simple SR-Latch, which houses a single bit. by controlling whether that bit is 1, or 0 using the inputs S(set) and R(reset)
    second of all i was able to create a WORD, which is (hopefully you remember) a collection of 24 bits, but in terms of memory is a collection of 24 SR Latches
    thus a WORD is initialized with 24 latches and seperate functions on being able to update the contents of the word and reading the contents of the word
-   Finally using the two later sequential circuits i was able to construct RAM. In this system ram will consist of 65
+   Finally using the two later sequential circuits i was able to construct RAM. In this system ram will consist of 65536 seprate words numbers from 0->65535
+   RAM is rather interesting as now we can write by taking in an entire bus as input or read by returning an entire bus as output
+
+4. PC.py
+ This file houses the program counter (though i will admit i should have just placed in inside memory file for obvious reasons
+ The program counter is a special type of WORD which stores the address(memory address) of the next instruction to be executed
+ It comprises of important functions such as increment which allows us to move one address up and jump which allows us to move to an entirely different  address although
+
+5. CPU.py
+   This is the power house of everything, whereby finally things start coming together to form a functioning computer
+   Firstly let us address a couple of important states our cpu must have, these are mainly just registers, reg1,reg2,the accumulator, the CIR (current instruction register) and its own copy of the PC.
+   The main difference comes from the isa, note in the previous mention that i said the first 5 bits of an bus houses the instruction (unless its a data bus) now the isa maps each number of those 2^5 bits into its own instruction set. This consists of executions that the cpu can do, each of them build using their own callable function
+   The CPU houses these instructions, each taking is the op (or operand) as an argument (mainly for consistency sake) so that instructions that require the operand (or memory address) to write, or read data can do so
+   Finally arguably the most important part is the step function, which even though at first glance is simple is literally the entire workings of how a cpu runs. step does one iteration of the follow: Read whatever address is  inside the PC and place it into the CIR then increment the PC, Look at the CIR and extract the necessary data from the corresponding memory address, Decode the data into its opcode and operand, lookup the instruction that the opcode represents from the isa, then finally run.
+   The way this cycle continues indefinetely is by the run function which checks if a super special boolean called the runnnig bool is still true, and the only way this boolean can become false is through the insruction 00000 --> HALT
+
+6. computer.py
+   This file takes everything together by initiallizing ram and cpu and parsing the ram into the cpu and finally creating a program loader which takes YOUR custom programs and places them inside memory starting from address 0. This is the main file that you need to pay attention to and other ones can be used for purely inspection purposes
+
+Other honourable mentions is the testing file which currentlty serves no purpose other than to test certain aspect to ensure proper functioning and the conversion file which convert normal human integer numbers into a 24 bit bus and vice versa.
+
+In conclusion this is my first attempt at a something complete project and i hope you enjoy making your own programs and i look forward to the feedback
