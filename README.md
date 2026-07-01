@@ -49,6 +49,9 @@ Now lets go through each layer:
 6. computer.py
    This file takes everything together by initiallizing ram and cpu and parsing the ram into the cpu and finally creating a program loader which takes YOUR custom programs and places them inside memory starting from address 0. This is the main file that you need to pay attention to and other ones can be used for purely inspection purposes
 
+7. assembler.py
+   Most of the documentation has been added inside programming.txt insie the programs folder which explains in detail the assembler and its structure
+
 Other honourable mentions is the testing file which currentlty serves no purpose other than to test certain aspect to ensure proper functioning and the conversion file which convert normal human integer numbers into a 24 bit bus and vice versa.
 
 In conclusion this is my first attempt at a something complete project and i hope you enjoy making your own programs and i look forward to the feedback
