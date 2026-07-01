@@ -1,0 +1,124 @@
+This project has come a long way and now we even have a working assembler!!!
+
+For those that dont know the implications of this it basically means we can finally evolve from primitive coding in ones and zeros
+
+e.g: 1000000011 01110000000 (imagine it corresponds to load to reg1 and reg2)
+
+Even though i tried to simplifty this entire process by making a somewhat self loading function 
+whereby you could break down code into a integer representing the opcode and operend e.g (1,0) [Which means add]
+was still a somewhat tedious quest as you had to manually remember each memory address whereby you wanted to store data
+and remember what opcode number corresponded to adding, jumping, etc.
+
+But with this new update i created an entire essembler (in python), which takes somewhat high level (but still low level) code
+and does the whole binary coding manually. 
+
+I shall call this language MK_x24, and this file somewhat barebone tutorial should teach you the basics to make your own programs:
+
+to begin with i shall provide a snippet of code that loads two numbers in memory into register 1 and 2 and then adds them (from the number adder.txt file)
+
+"""
+.data num1 12
+.data num2 50
+
+MAIN:
+    LOAD_R1 num1
+    LOAD_R2 num2
+    ADD
+    HALT
+"""
+
+Now this rather simple application shows a couple of import features that needs to be addressed:\
+
+1. Firstly to combat the fact that you previously needed to manually load data into ram and remember what address the data was in.
+Now i introduce Data Label, which are in a nutshell variables to store data. intialized in the format: [.data] [var_nam] [var_value].
+the [.data] directive is crucial as it actually tells the assembler that this is infact a variable/Data Label. and the rest should be 
+a common notation to other programming languages. currently there is no feature for simply declaring a Data Label but you can just intialize
+the variable to 0. now after intializing the variable it can be used anywhere in your code that requires it as either data (LOAD) or for storing
+(STORE). The location in RAM whereby a Data Label is stored is actually immediatelt after the program itself. after all instructions have been created
+and read, the assembler than allocates sequenial memory right next to the program in the order in which you created the variable. You can intialize 
+a Data Label anywhere in your code so dont worry
+
+2. Secondly something that mimicks Data Labels very closely is what i call Address Label. This combats the program whereby you had to remember addresses
+of wherever your program is running to call a jump (in the case of creating loops) but Address Labels completley combat that. An Address Label is 
+simply intialized in the following fomat: [Label_name] [:(colon)]. the name is simply a unique identifier that you can use to simply right down
+whilst the colon is what actually tells the assembler that this is infact an Address Label. The unique thing about the Address Label is that it does not
+sit anywhere in ram particular but instead is mapped out in the assembler using a Label table (a dictionary) which is a table that shows which address
+the corresponding Address Label is pointing two. Interesting fact is that both Address and Data Labels are boted mapped inside the label table,
+both with the name created by the programmer and the address it points to, the only difference is that a Data Label loads the data in memory for you
+before execution of the program and the Address Label purely points.
+To demonstrate the practical use of Address Labels we first copy the program above with addresses coupled to it:
+
+"""
+.data num1 12 (0100)
+.data num2 50 (0101)
+
+MAIN: -> 0000
+    LOAD_R1 num1 (0000)
+    LOAD_R2 num2 (0001)
+    ADD (0010)
+    HALT (0011)
+"""
+
+As you can see the actual program is stored in address 0000 to 0011 (and notice Data labels are stored immediatley after the program: 0100,0101)
+Now the MAIN Address Label as we see points to address location 0000, which is the load function, so lets change the code a bit to this instead:
+
+"""
+.data num1 12 (0101)
+.data num2 50 (0110)
+
+MAIN: -> 0000
+    LOAD_R1 num1 (0000)
+    LOAD_R2 num2 (0001)
+    ADD (0010)
+    JMP MAIN (0011)
+    HALT (0100)
+"""
+
+Now we add a jump at address 0011 (3) what this does is looks up the label that we are jumping to (which is main) from the label lookup table
+we mentioned before and since MAIN points to address 0000, the PC (program counter) and essentially the program will move back to address 0000 and 
+execute address 0000 again. As one can see, this is an infinite loop and very bad!!!
+
+3. Lastly on my assembly feature is how you actually write code itself, instructions are seperated into mneumonics (keywords of opcodes) and if 
+the instruction requires it, also an operand as an argument. this is nothing special but beats having to remember numbers for instructions, to see the entire
+mneumonics table, make use of this comprehensive guide
+
+
+#This is my isa, it basically shows what instruction corresponds to and how to write a program
+"""
+0 HALT -> Stops the program
+1 ADD -> it adds whatever is in register 1 and register 2 and puts them into the acc
+2 SUB -> it subtracts whatever is in register 2 from register 1 (basically its reg1 - reg2) and then stores the result into the acc
+3 PUSH -> (remember the stack pointer) this adds whatever contents is inside the acc (numerical value) into the current location where the stack pointer is
+          and then moves the stackpointer down to the next memory address e.g(if 10 is in acc and the stackptr is on memory address 6000 then it adds the value 10 into memory address 6000 and then moves the stackptr to point at memory address 5999)
+4 POP -> oposite of PUSH, it moves the stackptr up a memory address e.g(from memory location 5999 to 6000) and then returns the value at the location it moved to
+5 CALL -> this stores the current memory address in the PC into the stackptr (essentially calling PUSH) and then jumps to the memory address specifiec by the operand by making the PC that memory address
+6 RETURN -> opposite of CALL and it just calls the POP instruction to receive whatever memory address was put into the stack and then jumps back to it by setting the PC to that address
+7 LOAD_R1 -> this loads whatever value from a memory address specified in the oparend into register 1
+8 LOAD_R2 -> this loads whatever value from a memory address specified in the operand into register 2
+9 LOAD_ACC -> this loads whatever value from a memory address specified in the operand into the acc
+10 STORE_R1 -> this stores whatever value that is in register 1 into the memory address specified in the operand
+11 STORE_R2 -> this stores whatever value that is in register 2 into the memory address specified in the operand
+12 STORE_ACC -> this stores whatever value that is in the acc into the memory address specified in the operand
+13 MOV_R1_ACC -> instruction that copies the contents of register 1 and loads them into the acc
+14 MOV_R2_ACC -> instruction that copies the contents of register 2 and loads them into the acc
+15 MOV_R1_R2 -> instruction that copies the contents of register 1 and loads them into register 2
+16 AND -> this performs the bitwise AND operation by using the data in register 1 and register 2 and storing the resulting into the acc
+17 OR -> this performs the bitwise OR operation by using the data in register 1 and register 2 and storing the resulting into the acc
+18 NOT -> this performs the bitwise NOT operation by using the data in register 1 and storing the resulting into the acc
+19 XOR -> this performs the bitwise XOR operation by using the data in register 1 and register 2 and storing the resulting into the acc
+20 JMP -> this updates the PC to the operand, essentially jumping to a new memory address/instruction to be executed (essentially a loop)
+21 JMP_IZ -> instruction that updates the PC to the operand if the contents in the acc is zero 
+22 JMP_IN -> instruction that updates the PC to the operand if the contents in the acc is negative
+23 EQ -> This instruction takes the content in register 1 and register 2 and determines if their equal it updates the acc as 1(true) or 0(false)
+24 GT -> This instruction takes the content in register 1 and register 2 and determines if register 1 is greater than register 2 it updates the acc as 1(true) or 0(false)
+25 GRS -> This instruction takes the content in register 1 and register 2 and determines if register 1 is strictly greater than register 2 it updates the acc as 1(true) or 0(false)
+26 LS -> This instruction performs bitwise left shift on whatever value is inside the acc, it essentially multiplies a number by 2
+27 OUT -> This instructions prints whatever is in the acc to the screen (for now this is the terminal)
+28 IN -> This instruction reads a keyboard stroke and stores it in the acc as a numeric value
+31 NOP -> This instruction does nothing (good as a placeholder for pausing without stopping the program)
+"""
+
+Now having this table and knowledge of MK_x24 you can program some pretty complex things. other few things to mentions, whitespaces dont matter
+as well as where you initialize labels but using the above example of mine, it provides a neater and overall more enjoyable experience
+
+Finally dont forget to change "number_adder.txt" to actually program and run computer.py to run that script
