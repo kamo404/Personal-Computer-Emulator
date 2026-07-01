@@ -152,6 +152,7 @@ class CPU():
 
     def In(self,op):
         self.acc.update(to_bus(ord(input())))
+        
     def Out(self,op):
         print(chr(to_int(self.acc.read())))
 

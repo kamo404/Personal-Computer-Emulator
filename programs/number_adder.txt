@@ -1,0 +1,8 @@
+.data num1 12
+.data num2 50
+
+MAIN:
+    LOAD_R1 num1
+    LOAD_R2 num2
+    ADD
+    HALT
