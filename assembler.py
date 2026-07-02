@@ -53,7 +53,7 @@ def assemble(ram: RAM = None):
             "PUSH": 3,
             "POP": 4,
             "CALL": 5,
-            "RETR": 6,
+            "RETURN": 6,
             "LOAD_R1": 7,
             "LOAD_R2": 8,
             "LOAD_ACC": 9,

@@ -1,23 +1,25 @@
-.data count 10
+.data num1 6
+.data num2 4
+.data result 0
 .data one 1
-.data zero 0
-.data temp 0
 
 MAIN:
-    LOAD_R1 count
+    CALL MULTIPLY
+    LOAD_ACC result
+    OUT
+    HALT
+
+MULTIPLY:
+    LOAD_ACC num2
+    JMP_IZ DONE
+    LOAD_R1 result
+    LOAD_R2 num1
+    ADD
+    STORE_ACC result
+    LOAD_R1 num2
     LOAD_R2 one
     SUB
-    STORE_ACC count
-    OUT
-
-    LOAD_R1 count
-    LOAD_R2 zero
-    EQ
-  
-    JMP_IZ MAIN
-    
-    JMP END
-
-        
-END:
-    HALT
+    STORE_ACC num2
+    JMP MULTIPLY
+DONE:
+    RETURN

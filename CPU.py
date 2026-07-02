@@ -67,7 +67,7 @@ class CPU():
 
     #this function takes in a bus/WORD and puts it into where the stackpointer is currently pointing to and then moves down to another memory address
     def push(self,op):
-        self.ram.write(self.stackptr.read(),self.acc.read())
+        self.ram.write(self.stackptr.read(),op)
         self.stackptr.update(circ.BUS_SUBT(self.stackptr.read(),to_bus(1)))
 
     #this function moves the pointer up by one memory address and displays the value at that address
@@ -94,7 +94,8 @@ class CPU():
     
     #this jumps to the memory address that was in the stack
     def retr(self,op):
-        self.jmp(self.pop(op))
+        self.pop(op)
+        self.jmp(self.acc.read())
 
     def load_r1(self, op):
         self.reg1.update(self.ram.read(op))
