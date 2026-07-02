@@ -4,7 +4,7 @@ from conversion import to_bus,to_int
 def assemble(ram: RAM = None):
     lines = list()
     #this opens the file and extracts each line in a list (skipping blank lines)
-    with open("programs/number_adder.txt","r") as file:
+    with open("programs/program.txt","r") as file:
         for line in file:
             if line.strip():
                 lines.append(line)
@@ -30,6 +30,7 @@ def assemble(ram: RAM = None):
     counter = 0     
     for line in new_file:
         if ":" in line:
+            line = line.replace(":","")
             label_tbl[line[0:]] = counter
         else:
             counter += 1
@@ -77,6 +78,7 @@ def assemble(ram: RAM = None):
             "IN": 28,
             "NOP": 31}
     
+
     #breaks down code into its opcode and operand and formes a set of numeric instructions for it
     instruct = list()
     temp = list()
@@ -94,4 +96,5 @@ def assemble(ram: RAM = None):
                     operand = int(temp[1])
                     instruct.append([opcode,operand])
             temp = list()
+
     return instruct

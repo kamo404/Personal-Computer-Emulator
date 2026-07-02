@@ -151,10 +151,10 @@ class CPU():
         pass
 
     def In(self,op):
-        self.acc.update(to_bus(ord(input())))
+        self.acc.update(to_bus(int(input())))
         
     def Out(self,op):
-        print(chr(to_int(self.acc.read())))
+        print(to_int(self.acc.read()))
 
 
     #this executes the fetch ececute cycle once
