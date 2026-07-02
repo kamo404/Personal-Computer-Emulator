@@ -88,10 +88,10 @@ mneumonics table, make use of this comprehensive guide
 0 HALT -> Stops the program
 1 ADD -> it adds whatever is in register 1 and register 2 and puts them into the acc
 2 SUB -> it subtracts whatever is in register 2 from register 1 (basically its reg1 - reg2) and then stores the result into the acc
-3 PUSH -> (remember the stack pointer) this adds whatever contents is inside the acc (numerical value) into the current location where the stack pointer is
+3 PUSH -> (remember the stack pointer) this adds the opeand (numerical value) into the current location where the stack pointer is
           and then moves the stackpointer down to the next memory address e.g(if 10 is in acc and the stackptr is on memory address 6000 then it adds the value 10 into memory address 6000 and then moves the stackptr to point at memory address 5999)
-4 POP -> oposite of PUSH, it moves the stackptr up a memory address e.g(from memory location 5999 to 6000) and then returns the value at the location it moved to
-5 CALL -> this stores the current memory address in the PC into the stackptr (essentially calling PUSH) and then jumps to the memory address specifiec by the operand by making the PC that memory address
+4 POP -> oposite of PUSH, it moves the stackptr up a memory address e.g(from memory location 5999 to 6000) and then returns the value at the location it moved to into the acc
+5 CALL -> this stores the current memory address in the PC into the stackptr (essentially calling PUSH) and then jumps to the memory address specified by the operand by making the PC that memory address
 6 RETURN -> opposite of CALL and it just calls the POP instruction to receive whatever memory address was put into the stack and then jumps back to it by setting the PC to that address
 7 LOAD_R1 -> this loads whatever value from a memory address specified in the oparend into register 1
 8 LOAD_R2 -> this loads whatever value from a memory address specified in the operand into register 2
@@ -111,7 +111,7 @@ mneumonics table, make use of this comprehensive guide
 22 JMP_IN -> instruction that updates the PC to the operand if the contents in the acc is negative
 23 EQ -> This instruction takes the content in register 1 and register 2 and determines if their equal it updates the acc as 1(true) or 0(false)
 24 GT -> This instruction takes the content in register 1 and register 2 and determines if register 1 is greater than register 2 it updates the acc as 1(true) or 0(false)
-25 GRS -> This instruction takes the content in register 1 and register 2 and determines if register 1 is strictly greater than register 2 it updates the acc as 1(true) or 0(false)
+25 GTS -> This instruction takes the content in register 1 and register 2 and determines if register 1 is strictly greater than register 2 it updates the acc as 1(true) or 0(false)
 26 LS -> This instruction performs bitwise left shift on whatever value is inside the acc, it essentially multiplies a number by 2
 27 OUT -> This instructions prints whatever is in the acc to the screen (for now this is the terminal)
 28 IN -> This instruction reads a keyboard stroke and stores it in the acc as a numeric value
